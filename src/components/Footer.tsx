@@ -7,11 +7,10 @@ export function Footer() {
   const socialLinks = [
     { name: "LinkedIn", icon: <Linkedin size={20} />, href: "https://linkedin.com/company/csec-astu" },
     { name: "Telegram", icon: <Send size={20} />, href: "https://t.me/CSEC_ASTU" },
-    { name: "Instagram", icon: <Instagram size={20} />, href: "https://instagram.com/csec_astu" },
   ];
 
   return (
-    <footer className="mt-20 py-12 px-6 border-t border-white/5 bg-accent-primary/[0.02]">
+    <footer className="mt-20 py-12 px-6 border-t border-white/5 bg-accent-primary/2">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="text-center md:text-left">
           <div className="font-display font-bold text-xl tracking-tight mb-2">

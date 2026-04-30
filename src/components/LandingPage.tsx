@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { motion } from "motion/react";
 import { useCMSData } from "../hooks/useContent";
 import { ContestCard } from "./ContestCard";
-import { Loader2, AlertCircle, Terminal, ChevronDown } from "lucide-react";
+import { Loader2, AlertCircle, ChevronDown, Search } from "lucide-react";
 import logo from "../../public/CSEC ASTU.png"
+
 export function LandingPage() {
   const { data, loading, error } = useCMSData();
+  const [searchQuery, setSearchQuery] = useState("");
 
   if (loading) {
     return (
@@ -38,6 +41,11 @@ export function LandingPage() {
   }
 
   const contests = data?.contests || [];
+  
+  const filteredContests = contests.filter(contest => 
+    contest.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    contest.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const scrollToContests = () => {
     document.getElementById("contests-section")?.scrollIntoView({ behavior: "smooth" });
@@ -95,19 +103,36 @@ export function LandingPage() {
       {/* SECTION 2: CONTESTS */}
       <section id="contests-section" className="min-h-screen shrink-0 snap-start py-20 px-6 relative z-10 bg-background flex flex-col">
         <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col justify-center">
-          <div className="mb-16">
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">Latest <span className="text-accent-primary italic">Contests</span></h2>
-            <p className="text-muted text-lg max-w-2xl">Browse our deep-dive analyses and optimized solutions for recent university and international contests.</p>
+          <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="max-w-2xl">
+              <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">Latest <span className="text-accent-primary italic">Contests</span></h2>
+              <p className="text-muted text-lg">Browse our deep-dive analyses and optimized solutions for recent university and international contests.</p>
+            </div>
+            
+            <div className="relative w-full md:max-w-md">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Search size={20} className="text-muted" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search contests by name or description..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3.5 bg-surface border border-border-custom rounded-xl text-white placeholder-muted focus:outline-none focus:border-accent-primary/50 focus:ring-1 focus:ring-accent-primary/50 transition-all shadow-sm"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {contests.length > 0 ? (
-              contests.map((contest, idx) => (
+            {filteredContests.length > 0 ? (
+              filteredContests.map((contest) => (
                 <ContestCard key={contest.id} contest={contest} />
               ))
             ) : (
               <div className="col-span-full py-24 text-center border-2 border-dashed border-white/5 rounded-3xl bg-white/[0.02]">
-                <p className="text-muted text-lg italic">No contests published yet. Stay tuned!</p>
+                <p className="text-muted text-lg italic">
+                  {contests.length > 0 ? "No contests match your search." : "No contests published yet. Stay tuned!"}
+                </p>
               </div>
             )}
           </div>
