@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0b0b0f;
+  --color-surface: #0f0f14;
+  --color-surface-hover: #16161d;
+  --color-border-custom: #2e2d37;
+  --color-accent-primary: #fda92c;
+  --color-accent-secondary: #4a82c3;
+  --color-depth: #2d241b;
+  
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --shadow-premium: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-white antialiased selection:bg-accent-primary/20 selection:text-accent-primary font-sans;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(253, 169, 44, 0.03) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(74, 130, 195, 0.03) 0px, transparent 50%);
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-surface border border-border-custom rounded-2xl overflow-hidden transition-all duration-300;
+  }
+  
+  .glass-card:hover {
+    @apply border-white/10 shadow-premium;
+  }
+
+  .section-container {
+    @apply max-w-5xl mx-auto px-6;
+  }
+}
