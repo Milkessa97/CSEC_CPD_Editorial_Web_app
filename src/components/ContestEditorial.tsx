@@ -50,6 +50,7 @@ export function ContestEditorial() {
           subtitle={contest.description} 
           date={contest.date} 
           difficulty={contest.stats.difficultyRange}
+          contestLink={contest.contestLink}
         />
 
         <StatsSection 
@@ -75,6 +76,28 @@ export function ContestEditorial() {
               </div>
             </motion.div>
 
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="sticky top-0 z-40 bg-background/90 backdrop-blur-md py-4 mb-8 border-y border-white/5 overflow-x-auto no-scrollbar"
+            >
+              <div className="flex items-center gap-2 max-w-4xl mx-auto">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted mr-4 hidden sm:block">Jump To:</span>
+                {contest.problems.map((problem) => (
+                  <button
+                    key={`nav-${problem.id}`}
+                    onClick={() => {
+                      document.getElementById(`problem-${problem.id}`)?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="w-10 h-10 shrink-0 rounded-full bg-surface border border-border-custom hover:border-accent-primary hover:text-accent-primary hover:shadow-[0_0_15px_rgba(var(--color-accent-primary),0.3)] text-sm font-bold font-display transition-all"
+                  >
+                    {problem.id}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+
             <motion.div 
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -84,10 +107,12 @@ export function ContestEditorial() {
               {contest.problems.map((problem, i) => (
                 <motion.div
                   key={problem.safeKey}
+                  id={`problem-${problem.id}`}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}
+                  className="scroll-mt-36"
                 >
                   <ProblemCard problem={problem} />
                 </motion.div>

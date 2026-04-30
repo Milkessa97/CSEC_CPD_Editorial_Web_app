@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ChevronDown, Hash, Workflow, Target } from "lucide-react";
+import { ChevronDown, Hash, Workflow, Target, Clock } from "lucide-react";
 import { Problem } from "../types";
 import { CodeBlock } from "./CodeBlock";
 
@@ -68,8 +68,8 @@ export function ProblemCard({ problem }: ProblemCardProps) {
             </div>
             <div className="flex flex-wrap items-center gap-3">
               {problem.tags.map(tag => (
-                <span key={tag} className="text-[10px] text-muted uppercase tracking-widest flex items-center gap-1.5 font-bold">
-                  <span className="w-1 h-1 rounded-full bg-border-custom group-hover:bg-accent-secondary transition-colors" />
+                <span key={tag} className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] text-muted uppercase tracking-widest flex items-center gap-1.5 font-bold transition-colors hover:bg-white/10 hover:border-white/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-border-custom group-hover:bg-accent-secondary transition-colors shadow-sm" />
                   {tag}
                 </span>
               ))}
@@ -129,9 +129,12 @@ export function ProblemCard({ problem }: ProblemCardProps) {
                   </div>
 
                   <div className="space-y-5">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
                       <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">Implementation</div>
-                      <div className="text-[10px] font-mono text-accent-primary font-bold">{formatComplexity(problem.optimizedSolution)}</div>
+                      <div className="px-3 py-1.5 rounded-lg bg-surface border border-border-custom text-[10px] font-mono text-accent-primary font-bold flex items-center gap-2 shadow-sm">
+                        <Clock size={12} className="text-muted" />
+                        <span>{formatComplexity(problem.optimizedSolution)}</span>
+                      </div>
                     </div>
                     <CodeBlock code={problem.code} />
                   </div>

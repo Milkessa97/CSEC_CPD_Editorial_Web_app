@@ -1,17 +1,10 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LandingPage } from "./components/LandingPage";
 import { ContestEditorial } from "./components/ContestEditorial";
+import { inject } from '@vercel/analytics';
 
+// Initialize analytics
+inject();
 export default function App() {
   return (
     <Router>

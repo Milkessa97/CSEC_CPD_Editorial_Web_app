@@ -44,6 +44,7 @@ export function useCMSData() {
             name: String(row.title || row.name || "CPD Contest"),
             description: String(row.description || ""),
             date: String(row.date || ""),
+            contestLink: row.contestlink || row.contestLink ? String(row.contestlink || row.contestLink) : undefined,
             stats: {
               problemCount: pForContest.length,
               participants: parseInt(row.participants) || 0,
