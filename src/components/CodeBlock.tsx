@@ -8,7 +8,7 @@ interface CodeBlockProps {
   language?: string;
 }
 
-export function CodeBlock({ code, language = "C++" }: CodeBlockProps) {
+export function CodeBlock({ code, language = "Python" }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
 
@@ -18,7 +18,7 @@ export function CodeBlock({ code, language = "C++" }: CodeBlockProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const syntaxLanguage = language.toLowerCase() === "c++" ? "cpp" : language.toLowerCase();
+  const syntaxLanguage = language.toLowerCase() === "py" ? "Python" : language.toLowerCase();
 
   return (
     <div className="relative group rounded-xl overflow-hidden border border-border-custom bg-[#1E1E1E] font-mono text-sm leading-relaxed shadow-lg">
