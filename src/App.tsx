@@ -1,10 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LandingPage } from "./components/LandingPage";
 import { ContestEditorial } from "./components/ContestEditorial";
-import { inject } from '@vercel/analytics';
+import { Analytics } from '@vercel/analytics/react';
 
-// Initialize analytics
-inject();
 export default function App() {
   return (
     <Router>
@@ -13,6 +11,7 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/contest/:contestId" element={<ContestEditorial />} />
         </Routes>
+        <Analytics />
       </div>
     </Router>
   );
