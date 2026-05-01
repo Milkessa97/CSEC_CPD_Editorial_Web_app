@@ -23,10 +23,10 @@ export interface Contest {
   name: string;
   description: string;
   date: string;
-  contestLink?: string;
+  isUpcoming?: boolean;
   stats: {
     problemCount: number;
-    participants: number;
+    participants: number | string;
     difficultyRange: string;
   };
   problems: Problem[];

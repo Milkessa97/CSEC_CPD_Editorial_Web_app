@@ -2,7 +2,8 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { useCMSData } from "../hooks/useContent";
 import { ContestCard } from "./ContestCard";
-import { Loader2, AlertCircle, ChevronDown, Search } from "lucide-react";
+import { UpcomingContestCard } from "./UpcomingContestCard";
+import { Loader2, AlertCircle, ChevronDown, Search, Rocket } from "lucide-react";
 import logo from "../../public/CSEC ASTU.png"
 
 export function LandingPage() {
@@ -42,10 +43,17 @@ export function LandingPage() {
 
   const contests = data?.contests || [];
   
-  const filteredContests = contests.filter(contest => 
+  const upcomingContests = contests.filter(c => c.isUpcoming).slice(0, 3);
+  const pastContests = contests.filter(c => !c.isUpcoming);
+
+  const filteredPastContests = pastContests.filter(contest => 
     contest.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     contest.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const scrollToUpcoming = () => {
+    document.getElementById("upcoming-contests-section")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const scrollToContests = () => {
     document.getElementById("contests-section")?.scrollIntoView({ behavior: "smooth" });
@@ -54,17 +62,20 @@ export function LandingPage() {
   return (
     <div className="h-screen bg-background flex flex-col overflow-y-auto snap-y snap-mandatory scroll-smooth">
       {/* SECTION 1: HERO */}
-      <section className="min-h-screen shrink-0 snap-start flex flex-col items-center justify-center px-6 relative">
+      <section className="min-h-screen shrink-0 snap-start flex flex-col items-center justify-center px-6 relative overflow-hidden">
         {/* Subtle background glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent-primary/10 blur-[120px] rounded-full pointer-events-none" />
         
-        <header className="text-center max-w-4xl mx-auto z-10 flex flex-col items-center">
+        {/* Animated Background Grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] opacity-50 pointer-events-none" />
+
+        <header className="text-center max-w-4xl mx-auto z-10 flex flex-col items-center relative">
           <motion.div
             initial={{ opacity: 0, y: -20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            className="flex flex-col items-center mb-4 md:mb-6"
+            className="flex flex-col items-center mb-6 md:mb-8"
           >
-            <div className="w-40 h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 flex items-center justify-center drop-shadow-[0_0_30px_rgba(var(--color-accent-primary),0.2)]">
+            <div className="w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 flex items-center justify-center drop-shadow-[0_0_40px_rgba(var(--color-accent-primary),0.3)] hover:scale-105 transition-transform duration-500 cursor-pointer">
               <img src={logo} alt="CSEC ASTU Logo" className="w-full h-full object-contain" />
             </div>
           </motion.div>
@@ -75,32 +86,127 @@ export function LandingPage() {
             transition={{ delay: 0.1 }}
             className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white tracking-tight mb-6 leading-[1.1]"
           >
-            <span className="text-accent-primary italic">CPD Division</span>
+            <span className="bg-gradient-to-r from-accent-primary to-orange-400 bg-clip-text text-transparent italic filter drop-shadow-[0_0_15px_rgba(var(--color-accent-primary),0.3)]">CPD Division</span>
           </motion.h1>
           
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-muted text-lg md:text-xl lg:text-2xl leading-relaxed font-light max-w-2xl mx-auto"
+            className="text-muted text-lg md:text-xl lg:text-2xl leading-relaxed font-light max-w-2xl mx-auto mb-10"
           >
             Official contest editorials and solutions focused on building strong problem-solving skills.
           </motion.p>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-col sm:flex-row items-center gap-4"
+          >
+            <button 
+              onClick={scrollToUpcoming}
+              className="px-8 py-4 rounded-full bg-accent-primary text-white font-bold text-lg hover:bg-[#ffb94f] transition-all hover:scale-105 shadow-[0_0_20px_rgba(var(--color-accent-primary),0.4)] hover:shadow-[0_0_30px_rgba(var(--color-accent-primary),0.6)]"
+            >
+              Start Exploring
+            </button>
+            <button 
+              onClick={scrollToContests}
+              className="px-8 py-4 rounded-full bg-white/5 text-white font-bold text-lg border border-white/10 hover:bg-white/10 transition-all hover:scale-105 backdrop-blur-sm"
+            >
+              Past Editorials
+            </button>
+          </motion.div>
         </header>
 
         <motion.button 
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 1 }}
-          onClick={scrollToContests}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 text-muted hover:text-accent-primary transition-colors flex flex-col items-center gap-2 cursor-pointer"
+          animate={{ opacity: 1, y: [0, -10, 0] }}
+          transition={{ 
+            delay: 0.8, 
+            y: { repeat: Infinity, duration: 2, ease: "easeInOut" }
+          }}
+          onClick={scrollToUpcoming}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-muted hover:text-accent-primary transition-colors flex flex-col items-center gap-2 cursor-pointer z-10"
         >
-          <span className="text-xs font-semibold uppercase tracking-widest">Explore</span>
-          <ChevronDown className="animate-bounce" size={24} />
+          <span className="text-xs font-semibold uppercase tracking-widest">Scroll</span>
+          <ChevronDown size={24} />
         </motion.button>
       </section>
 
-      {/* SECTION 2: CONTESTS */}
+      {/* SECTION 2: UPCOMING CONTESTS */}
+      <section id="upcoming-contests-section" className="min-h-screen shrink-0 snap-start py-20 px-6 relative z-10 bg-background flex flex-col justify-center">
+        {/* Subtle background glow for upcoming */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent-primary/5 via-background to-background pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto w-full relative z-10 flex flex-col items-center">
+          <div className="text-center mb-16 max-w-2xl mx-auto">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-4xl md:text-5xl font-display font-bold text-white mb-4"
+            >
+              Upcoming <span className="text-accent-primary italic">Contests</span>
+            </motion.h2>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-muted text-lg"
+            >
+              Prepare for the next challenge. Check out what's on the horizon for the CPD division.
+            </motion.p>
+          </div>
+
+          <div className="w-full">
+            {upcomingContests.length > 0 ? (
+              <div className={`grid grid-cols-1 ${upcomingContests.length === 1 ? 'max-w-md mx-auto' : upcomingContests.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-2 lg:grid-cols-3'} gap-8 w-full`}>
+                {upcomingContests.map((contest, i) => (
+                  <motion.div 
+                    key={contest.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 + 0.2 }}
+                  >
+                    <UpcomingContestCard contest={contest} />
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="max-w-2xl mx-auto py-20 px-8 text-center border border-white/5 rounded-3xl bg-surface-custom/50 backdrop-blur-sm relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+                <Rocket className="mx-auto text-accent-primary/50 mb-6" size={48} />
+                <h3 className="text-2xl font-display font-bold text-white mb-2">No Upcoming Contests</h3>
+                <p className="text-muted">
+                  We're brewing up new challenges. Check back later or explore our past editorials below!
+                </p>
+              </motion.div>
+            )}
+          </div>
+
+          <motion.button 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+            onClick={scrollToContests}
+            className="mt-20 text-muted hover:text-accent-primary transition-colors flex flex-col items-center gap-2 cursor-pointer"
+          >
+            <span className="text-xs font-semibold uppercase tracking-widest">Past Editorials</span>
+            <ChevronDown className="animate-bounce" size={24} />
+          </motion.button>
+        </div>
+      </section>
+
+      {/* SECTION 3: PAST CONTESTS */}
       <section id="contests-section" className="min-h-screen shrink-0 snap-start py-20 px-6 relative z-10 bg-background flex flex-col">
         <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col justify-center">
           <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -124,14 +230,14 @@ export function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredContests.length > 0 ? (
-              filteredContests.map((contest) => (
+            {filteredPastContests.length > 0 ? (
+              filteredPastContests.map((contest) => (
                 <ContestCard key={contest.id} contest={contest} />
               ))
             ) : (
               <div className="col-span-full py-24 text-center border-2 border-dashed border-white/5 rounded-3xl bg-white/[0.02]">
                 <p className="text-muted text-lg italic">
-                  {contests.length > 0 ? "No contests match your search." : "No contests published yet. Stay tuned!"}
+                  {pastContests.length > 0 ? "No contests match your search." : "No past contests available."}
                 </p>
               </div>
             )}

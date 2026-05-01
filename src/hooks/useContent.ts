@@ -50,6 +50,7 @@ export function useCMSData() {
               participants: parseInt(row.participants) || 0,
               difficultyRange: String(row.difficultyRange || row.difficultyrange || "TBA")
             },
+            isUpcoming: parseInt(row.participants) === 0 || row.participants === 0 || row.participants === "0" || !row.participants,
             problems: [] // We'll filter these dynamically or store them here
           };
         });
