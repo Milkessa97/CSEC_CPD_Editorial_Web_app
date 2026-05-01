@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "motion/react";
 import { useCMSData } from "../hooks/useContent";
 import { ContestCard } from "./ContestCard";
@@ -6,9 +6,62 @@ import { UpcomingContestCard } from "./UpcomingContestCard";
 import { Loader2, AlertCircle, ChevronDown, Search, Rocket } from "lucide-react";
 import logo from "../../public/CSEC ASTU.png"
 
+const BATCH_SIZE = 6;
+
 export function LandingPage() {
   const { data, loading, error } = useCMSData();
   const [searchQuery, setSearchQuery] = useState("");
+  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  const contests = data?.contests || [];
+  const upcomingContests = contests.filter(c => c.isUpcoming).slice(0, 3);
+  const pastContests = contests.filter(c => !c.isUpcoming);
+
+  const filteredPastContests = pastContests.filter(contest => {
+    const words = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
+    if (words.length === 0) return true;
+    const haystack = `${contest.name} ${contest.description}`.toLowerCase();
+    return words.every(word => haystack.includes(word));
+  });
+
+  const visibleContests = filteredPastContests.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredPastContests.length;
+
+  // Reset visible count when search query changes
+  useEffect(() => {
+    setVisibleCount(BATCH_SIZE);
+  }, [searchQuery]);
+
+  // IntersectionObserver for infinite scroll
+  const loadMore = useCallback(() => {
+    setVisibleCount(prev => Math.min(prev + BATCH_SIZE, filteredPastContests.length));
+  }, [filteredPastContests.length]);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, loadMore]);
+
+  const scrollToUpcoming = () => {
+    document.getElementById("upcoming-contests-section")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const scrollToContests = () => {
+    document.getElementById("contests-section")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   if (loading) {
     return (
@@ -40,24 +93,6 @@ export function LandingPage() {
       </div>
     );
   }
-
-  const contests = data?.contests || [];
-  
-  const upcomingContests = contests.filter(c => c.isUpcoming).slice(0, 3);
-  const pastContests = contests.filter(c => !c.isUpcoming);
-
-  const filteredPastContests = pastContests.filter(contest => 
-    contest.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    contest.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const scrollToUpcoming = () => {
-    document.getElementById("upcoming-contests-section")?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const scrollToContests = () => {
-    document.getElementById("contests-section")?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <div className="h-screen bg-background flex flex-col overflow-y-auto snap-y snap-mandatory scroll-smooth">
@@ -230,8 +265,8 @@ export function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredPastContests.length > 0 ? (
-              filteredPastContests.map((contest) => (
+            {visibleContests.length > 0 ? (
+              visibleContests.map((contest) => (
                 <ContestCard key={contest.id} contest={contest} />
               ))
             ) : (
@@ -242,6 +277,25 @@ export function LandingPage() {
               </div>
             )}
           </div>
+
+          {/* Infinite scroll sentinel */}
+          {hasMore && (
+            <div className="flex flex-col items-center mt-12 gap-6">
+              <div ref={sentinelRef} className="w-full h-4" />
+              <button
+                onClick={loadMore}
+                className="px-8 py-3 rounded-full bg-white/5 text-white font-bold text-sm border border-white/10 hover:bg-white/10 transition-all hover:scale-105 backdrop-blur-sm"
+              >
+                Load More ({filteredPastContests.length - visibleCount} remaining)
+              </button>
+            </div>
+          )}
+
+          {!hasMore && visibleContests.length > BATCH_SIZE && (
+            <p className="text-center text-muted text-xs mt-10 font-mono uppercase tracking-widest">
+              You've reached the end
+            </p>
+          )}
         </div>
       </section>
     </div>
