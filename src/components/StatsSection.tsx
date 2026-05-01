@@ -3,7 +3,7 @@ import { Files, Users, Zap } from "lucide-react";
 
 interface StatsSectionProps {
   problemCount: number;
-  participants: number;
+  participants: string | number;
   difficultyRange: string;
 }
 

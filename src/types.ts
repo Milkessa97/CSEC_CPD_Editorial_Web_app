@@ -24,6 +24,7 @@ export interface Contest {
   description: string;
   date: string;
   isUpcoming?: boolean;
+  contestLink?: string;
   stats: {
     problemCount: number;
     participants: number | string;

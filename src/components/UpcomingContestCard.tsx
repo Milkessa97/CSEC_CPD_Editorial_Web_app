@@ -50,12 +50,12 @@ export function UpcomingContestCard({ contest }: UpcomingContestCardProps) {
         className="relative h-full"
       >
         {/* Animated gradient border glow */}
-        <div className="absolute -inset-0.5 bg-linear-to-r from-accent-primary via-purple-500 to-accent-primary rounded-3xl blur opacity-30 group-hover:opacity-70 transition duration-1000 group-hover:duration-200 animate-gradient-xy" />
+        <div className="absolute -inset-0.5 bg-linear-to-r from-accent-primary/50 via-orange-400/30 to-accent-primary/50 rounded-3xl blur opacity-20 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
         
         <div className="relative h-full bg-surface-custom border border-white/10 rounded-2xl p-8 overflow-hidden flex flex-col">
         {/* Background decorative elements */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-accent-primary/20 blur-[50px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/20 blur-[50px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-accent-primary/10 blur-[50px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-orange-400/10 blur-[50px] rounded-full pointer-events-none" />
         
         {/* Top bar with pulsing badge */}
         <div className="flex items-center justify-between mb-6 relative z-10">
@@ -96,7 +96,7 @@ export function UpcomingContestCard({ contest }: UpcomingContestCardProps) {
             transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
             whileHover={{ scale: 1.1, y: 0 }}
             whileTap={{ scale: 0.95 }}
-            className="px-6 py-2.5 rounded-full bg-gradient-to-r from-accent-primary to-purple-600 text-white font-bold shadow-[0_0_20px_rgba(var(--color-accent-primary),0.4)] border border-white/10 hover:shadow-[0_0_30px_rgba(var(--color-accent-primary),0.6)] hover:from-accent-primary/90 hover:to-purple-500 transition-all cursor-pointer flex items-center gap-2"
+            className="px-6 py-2.5 rounded-full bg-accent-primary text-white font-bold shadow-[0_0_20px_rgba(var(--color-accent-primary),0.3)] border border-white/10 hover:shadow-[0_0_30px_rgba(var(--color-accent-primary),0.5)] hover:bg-[#ffb94f] transition-all cursor-pointer flex items-center gap-2"
             title="Add to Google Calendar"
           >
             <Calendar size={16} />
