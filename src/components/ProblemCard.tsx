@@ -56,7 +56,7 @@ export function ProblemCard({ problem }: ProblemCardProps) {
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center gap-8">
-          <div className="w-10 h-10 flex items-center justify-center font-display font-bold text-2xl text-muted group-hover:text-accent-secondary transition-colors">
+          <div className="w-10 h-10 flex items-center justify-center font-display font-bold text-2xl text-muted transition-colors">
             {problem.id}
           </div>
           <div>

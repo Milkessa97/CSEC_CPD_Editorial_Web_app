@@ -78,7 +78,7 @@ export function Hero({ title, subtitle, date, difficulty, contestLink }: HeroPro
               href={contestLink} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent-primary text-white font-bold tracking-wide hover:bg-accent-secondary hover:scale-105 transition-all shadow-[0_0_20px_rgba(var(--color-accent-primary),0.3)]"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent-primary text-white font-bold tracking-wide hover:bg-accent-primary/95 hover:scale-105 transition-all shadow-[0_0_20px_rgba(var(--color-accent-primary),0.3)]"
             >
               Go to Contest
               <ExternalLink size={18} />
