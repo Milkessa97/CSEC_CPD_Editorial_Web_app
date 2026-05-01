@@ -10,6 +10,7 @@ interface ProblemCardProps {
 
 export function ProblemCard({ problem }: ProblemCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const isDisabled = problem.difficulty.toLowerCase().includes("cooking");
 
   const getDifficultyColor = (difficulty: Problem["difficulty"]) => {
     switch (difficulty) {
@@ -52,8 +53,8 @@ export function ProblemCard({ problem }: ProblemCardProps) {
       transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
     >
       <div 
-        className="p-8 cursor-pointer flex items-center justify-between transition-colors hover:bg-white/[0.02]"
-        onClick={() => setIsExpanded(!isExpanded)}
+        className={`p-8 flex items-center justify-between transition-colors ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer hover:bg-white/[0.02]'}`}
+        onClick={() => !isDisabled && setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center gap-8">
           <div className="w-10 h-10 flex items-center justify-center font-display font-bold text-2xl text-muted transition-colors">
@@ -61,10 +62,16 @@ export function ProblemCard({ problem }: ProblemCardProps) {
           </div>
           <div>
             <div className="flex items-center gap-4 mb-2">
-              <h3 className="text-2xl font-display font-bold tracking-tight">{problem.title}</h3>
-              <span className={`px-2.5 py-1 text-[9px] uppercase font-bold rounded-md border tracking-wider ${getDifficultyColor(problem.difficulty)}`}>
-                {problem.difficulty}
-              </span>
+              <h3 className={`text-2xl font-display font-bold tracking-tight ${isDisabled ? 'text-white/40' : ''}`}>{problem.title}</h3>
+              {isDisabled ? (
+                <span className="px-3 py-1 text-[10px] uppercase font-bold rounded-md border tracking-wider text-amber-400 bg-amber-400/10 border-amber-400/20 flex items-center gap-2 animate-pulse">
+                  🍳 Coming Soon
+                </span>
+              ) : (
+                <span className={`px-2.5 py-1 text-[9px] uppercase font-bold rounded-md border tracking-wider ${getDifficultyColor(problem.difficulty)}`}>
+                  {problem.difficulty}
+                </span>
+              )}
             </div>
             <div className="flex flex-wrap items-center gap-3">
               {problem.tags.map(tag => (
@@ -77,16 +84,22 @@ export function ProblemCard({ problem }: ProblemCardProps) {
           </div>
         </div>
         
-        <motion.div
-          animate={{ rotate: isExpanded ? 180 : 0 }}
-          className="w-10 h-10 rounded-full flex items-center justify-center bg-surface border border-border-custom group-hover:border-white/20 transition-colors"
-        >
-          <ChevronDown size={20} className="text-muted group-hover:text-white transition-colors" />
-        </motion.div>
+        {isDisabled ? (
+          <div className="w-10 h-10 rounded-full flex items-center justify-center bg-surface border border-border-custom text-xl" title="Editorial coming soon">
+
+          </div>
+        ) : (
+          <motion.div
+            animate={{ rotate: isExpanded ? 180 : 0 }}
+            className="w-10 h-10 rounded-full flex items-center justify-center bg-surface border border-border-custom group-hover:border-white/20 transition-colors"
+          >
+            <ChevronDown size={20} className="text-muted group-hover:text-white transition-colors" />
+          </motion.div>
+        )}
       </div>
 
       <AnimatePresence>
-        {isExpanded && (
+        {isExpanded && !isDisabled && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
